@@ -6,6 +6,7 @@ from database import engine, Base
 from api import task, user
 import logging
 
+
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

@@ -1,0 +1,1 @@
+from .register_endpoint_responses import test_register_endpoint
