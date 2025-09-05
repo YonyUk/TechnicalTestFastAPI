@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from database import engine, Base
 from api import task, user
 import logging
+from scalar_fastapi import get_scalar_api_reference,Layout  # pyright: ignore[reportPrivateImportUsage]
 
 
 # Configurar logging
@@ -52,4 +53,17 @@ async def internal_exception_handler(request, exc):
     return JSONResponse(
         status_code=500,
         content={"message": "Error interno del servidor"},
+    )
+
+@app.get("/docs-scalar",include_in_schema=False)
+async def scalar_docs():
+    return get_scalar_api_reference(
+        openapi_url=app.openapi_url, # type: ignore
+        title='Documentation',
+        layout=Layout.MODERN,
+        dark_mode=True,
+        show_sidebar=True,
+        default_open_all_tags=True,
+        hide_download_button=False,
+        hide_models=False
     )
