@@ -1,0 +1,1 @@
+from .tasks_endpoints_tests import test_tasks_endpoints

@@ -1,1 +1,1 @@
-from .register_endpoint_responses import test_register_endpoint
+from .users_endpoint_test import test_users_endpoints
