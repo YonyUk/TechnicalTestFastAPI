@@ -38,7 +38,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Todo API",
-    description="API para administrar tareas TODO con FastAPI y PostgreSQL",
+    description="API for manage tasks TODO with FastAPI y PostgreSQL",
     version="1.0.0",
     lifespan=lifespan
 )
