@@ -22,7 +22,7 @@ def run_migrations():
     '''
     path_config = os.path.join(os.getcwd(),'alembic.ini')
     alembic_cfg = Config(path_config)
-    print(alembic_cfg.get_alembic_option('script_location'))
+    print('\n\nINFO:\t\tDocumentation at http://localhost:8000/docs-scalar\n\n')
     command.upgrade(alembic_cfg,'head')
 
 @asynccontextmanager
