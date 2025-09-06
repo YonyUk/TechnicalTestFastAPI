@@ -22,7 +22,6 @@ def run_migrations():
     '''
     path_config = os.path.join(os.getcwd(),'alembic.ini')
     alembic_cfg = Config(path_config)
-    print('\n\nINFO:\t\tDocumentation at http://localhost:8000/docs-scalar\n\n')
     command.upgrade(alembic_cfg,'head')
 
 @asynccontextmanager
@@ -40,7 +39,8 @@ app = FastAPI(
     title="Todo API",
     description="API for manage tasks TODO with FastAPI y PostgreSQL",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    docs_url=None
 )
 
 # adds routers
@@ -50,10 +50,6 @@ app.include_router(task.router, prefix="/api/v1", tags=["tasks"])
 @app.get("/")
 async def root():
     return {"message": "Bienvenido a la Todo API"}
-
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
 
 # global error manage
 @app.exception_handler(404)
@@ -71,15 +67,16 @@ async def internal_exception_handler(request, exc):
     )
 
 # adds documentation with scalar-fastapi
-@app.get("/docs-scalar",include_in_schema=False)
+@app.get("/docs",include_in_schema=False)
 async def scalar_docs():
     return get_scalar_api_reference(
         openapi_url=app.openapi_url, # type: ignore
-        title='Documentation',
+        title='TODO API Documentation',
         layout=Layout.MODERN,
         dark_mode=True,
         show_sidebar=True,
         default_open_all_tags=True,
         hide_download_button=False,
-        hide_models=False
+        hide_models=False,
+        servers=[{'url':'http://localhost:8000','description':'local server'}]
     )
