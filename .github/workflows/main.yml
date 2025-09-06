@@ -1,0 +1,14 @@
+name: Technical Test FastAPI
+on:[push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Execute
+        run: fastapi dev src/main.py
