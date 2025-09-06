@@ -26,7 +26,7 @@ python test.py
 ```
 
 > ## How to use
-For a more detailed information, run the app and open the <a href="http://localhost:8000/docs-scalar">documentation</a>
+For a more detailed information, run the app and open the <a href="http://localhost:8000/docs-scalar">documentation</a>. (***this will work only in your local machine if the app is running***)
 ### Users endpoints
 
 > `POST` /api/v1/register:
