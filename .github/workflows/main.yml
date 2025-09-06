@@ -4,6 +4,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Install FastAPI
+        run: pip install fastapi[standard]
+        
       - name: Checkout the code
         uses: actions/checkout@v4
 
