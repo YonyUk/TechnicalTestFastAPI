@@ -28,14 +28,14 @@ def read_tasks(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    # Construir query base
+    # build base query
     query = db.query(Task).filter(Task.user_id == current_user.id)
     
-    # Aplicar filtro de estado si se proporciona
+    # apply the filters if any
     if status is not None:
         query = query.filter(Task.status == status)
     
-    # Aplicar paginación
+    # apply pagination
     tasks = query.offset(skip).limit(limit).all()
     return tasks
 
@@ -45,11 +45,13 @@ def read_task(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    # gets the asked task
     task = db.query(Task).filter(
         Task.id == task_id, 
         Task.user_id == current_user.id
     ).first()
     
+    # if the asked task doesn't exists, raise 404 error
     if task is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -65,11 +67,13 @@ def update_task(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    # gets the asked task
     task = db.query(Task).filter(
         Task.id == task_id, 
         Task.user_id == current_user.id
     ).first()
     
+    # if the asked task doesn't exists, raise 404 error
     if task is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
