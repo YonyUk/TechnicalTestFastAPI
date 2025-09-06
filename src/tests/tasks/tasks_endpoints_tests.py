@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from tests.session import Session
+from ..session import Session
 import string
 import random
 import logging

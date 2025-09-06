@@ -7,7 +7,6 @@ from api import task, user
 import logging
 from scalar_fastapi import get_scalar_api_reference,Layout  # pyright: ignore[reportPrivateImportUsage]
 
-
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

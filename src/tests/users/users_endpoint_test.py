@@ -5,7 +5,7 @@ import random
 import string
 import re
 import logging
-from tests.session import Session
+from ..session import Session
 
 logging.basicConfig(level=logging.INFO)
 
