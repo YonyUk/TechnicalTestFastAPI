@@ -2,17 +2,30 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
 from fastapi.responses import JSONResponse
-from database import engine, Base
-from api import task, user
+from src.database import engine, Base
+from src.api import task, user
 import logging
 from scalar_fastapi import get_scalar_api_reference,Layout  # pyright: ignore[reportPrivateImportUsage]
+
+# alembic migrations
+from alembic.config import Config
+from alembic import command
+import os
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def run_migrations():
+    path_config = os.path.join(os.getcwd(),'alembic.ini')
+    alembic_cfg = Config(path_config)
+    print(alembic_cfg.get_alembic_option('script_location'))
+    command.upgrade(alembic_cfg,'head')
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # apply migrations before start
+    run_migrations()
     # Crear tablas al iniciar (en desarrollo)
     # En producción, usar migraciones con Alembic
     logger.info("Creating database tables...")
