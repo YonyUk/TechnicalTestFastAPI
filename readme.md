@@ -54,12 +54,12 @@ curl http://localhost:8000/api/v1/register \
 curl http://localhost:8000/api/v1/token \
   --request POST \
   --header 'Content-Type: application/x-www-form-urlencoded' \
-  --data-urlencode 'grant_type=' \
-  --data-urlencode 'username=' \
-  --data-urlencode 'password=' \
+  --data-urlencode 'grant_type=password' \
+  --data-urlencode 'username=name' \
+  --data-urlencode 'password=user_password' \
   --data-urlencode 'scope=' \
-  --data-urlencode 'client_id=' \
-  --data-urlencode 'client_secret='
+  --data-urlencode 'client_id=client_id' \
+  --data-urlencode 'client_secret=client_secret'
 ```
 
  - `RESPONSE`:
