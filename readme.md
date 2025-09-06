@@ -5,7 +5,7 @@ First, open a terminal in the root directory of the project and run the followin
 ```bash
 pip install fastapi[standard]
 
-pip install -r src/requirements.txt
+pip install -r requirements.txt
 ```
 
 After, run the following command from the opened terminal:
