@@ -10,6 +10,9 @@ logging.basicConfig(level=logging.INFO)
 letters_count = len(string.ascii_letters)
 
 def test_tasks_endpoints(app:FastAPI,session:Session):
+    '''
+    tests all the endpoints aviables for Task
+    '''
     client = TestClient(app)
 
     _test_post_task(client,session)
@@ -19,6 +22,9 @@ def test_tasks_endpoints(app:FastAPI,session:Session):
     _test_delete_task(client,session)
 
 def _test_post_task(client:TestClient,session:Session,tests:int = 10):
+    '''
+    tests the POST endpoint
+    '''
     for _ in range(tests):
         response = client.post('/api/v1/tasks',json=_fake_task())
         try:
@@ -37,6 +43,9 @@ def _test_post_task(client:TestClient,session:Session,tests:int = 10):
                 logging.error(f'STATUS CODE -----> EXPECTED 201, gets {response.status_code}')
 
 def _test_get_tasks(client:TestClient,session:Session,tests:int=10):
+    '''
+    tests the GET '/api/v1/tasks' endpoint
+    '''
     response = client.get('/api/v1/tasks')
     try:
         assert response.status_code == 401
@@ -51,15 +60,21 @@ def _test_get_tasks(client:TestClient,session:Session,tests:int=10):
             _test_get_tasks_authenticated(client,headers)
 
 def _test_get_tasks_by_id(client:TestClient,session:Session,tests:int=10):
+    '''
+    tests the GET '/api/v1/tasks/{task_id}' endpoint
+    '''
     if session.User == None or session.Token == None: return
     headers = {
         'Authorization':f'Bearer {session.Token}'
     }
+    # gets all the tasks
     response = client.get(f'/api/v1/tasks?skip=0&limit={tests}',headers=headers)
     if response.status_code != 200: return
     tasks = response.json()
     for _ in range(tests):
+        # gets a random task
         task = tasks[random.randint(0,len(tasks) - 1)]
+        # make a request for the selected task
         response = client.get(f'/api/v1/tasks/{task['id']}',headers=headers)
         try:
             assert response.status_code == 200
@@ -71,6 +86,9 @@ def _test_get_tasks_by_id(client:TestClient,session:Session,tests:int=10):
                 logging.error(f'TASK ----> EXPECTED {task}, gets {response.json()}')
 
 def _test_put_task(client:TestClient,session:Session,tests:int=10):
+    '''
+    tests the PUT endpoint
+    '''
     if session.User == None or session.Token == None: return
     headers = {
         'Authorization':f'Bearer {session.Token}'
@@ -89,6 +107,9 @@ def _test_put_task(client:TestClient,session:Session,tests:int=10):
             logging.error(f'STATUS CODE ----> EXPECTED 200, gets {response.status_code}')
 
 def _test_delete_task(client:TestClient,session:Session,tests:int=10):
+    '''
+    tests the DELETE endpoint
+    '''
     if session.User == None or session.Token == None: return
     headers = {
         'Authorization': f'Bearer {session.Token}'
@@ -106,6 +127,9 @@ def _test_delete_task(client:TestClient,session:Session,tests:int=10):
             logging.error(f'STATUS CODE ----> EXPECTED 200, gets {response.status_code}')
 
 def _test_get_tasks_authenticated(client:TestClient,headers:dict):
+    '''
+    tests the GET endpoint with an user authenticated
+    '''
     skip = random.randint(0,10)
     limit = random.randint(1,100)
     response = client.get(f'/api/v1/tasks?skip={skip}&limit={limit}',headers=headers)
@@ -122,6 +146,9 @@ def _test_get_tasks_authenticated(client:TestClient,headers:dict):
     _test_get_tasks_authenticated_filtered(client,headers,False)
 
 def _test_get_tasks_authenticated_filtered(client:TestClient,headers:dict,status:bool):
+    '''
+    tests the GET endpoint with an user authenticated and asking for a specific status
+    '''
     skip = random.randint(0,10)
     limit = random.randint(1,100)
     response = client.get(f'/api/v1/tasks?skip={skip}&limit={limit}&status={str(status).lower()}',headers=headers)
@@ -135,6 +162,9 @@ def _test_get_tasks_authenticated_filtered(client:TestClient,headers:dict,status
             logging.error(f'FILTER NOT APPLIED')
 
 def _fake_task_name() -> str:
+    '''
+    return a random task name
+    '''
     title = ''
     title_length = random.randint(5,10)
     for _ in range(title_length):
@@ -142,6 +172,9 @@ def _fake_task_name() -> str:
     return title
 
 def _fake_task_description() -> str:
+    '''
+    return a random task description
+    '''
     description_length = random.randint(10,50)
     description = ''
     for _ in range(description_length):
@@ -152,7 +185,13 @@ def _fake_task_description() -> str:
     return description
 
 def _fake_task_status() -> bool:
+    '''
+    return a random task status
+    '''
     return False if random.random() < 0.5 else True
 
 def _fake_task() -> dict:
+    '''
+    return a random task
+    '''
     return {"title":_fake_task_name(),"description":_fake_task_description(),"status":_fake_task_status()}

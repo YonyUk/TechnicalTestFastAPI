@@ -11,27 +11,43 @@ import os
 from src.schemas.token import TokenData
 import dotenv
 
+# load the .env file
 dotenv.load_dotenv()
 
+# load all the values
 SECRET_KEY = os.getenv("SECRET_KEY", "tu_clave_secreta_muy_segura_aqui")
 ALGORITHM = os.getenv('ALGORITHM',"algorithm to use")
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+# create the cryptography and authentication schemes
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/token")
 
-def verify_password(plain_password, hashed_password):
+def verify_password(plain_password, hashed_password) -> bool:
+    '''
+    verify if the given plain_password has the hashed_password result
+    '''
     return pwd_context.verify(plain_password, hashed_password)
 
-def get_password_hash(password):
+def get_password_hash(password:str) -> str:
+    '''
+    gets the hash of the given password
+    '''
     return pwd_context.hash(password)
 
 # get database's user
-def get_user(db: Session, username: str):
+def get_user(db: Session, username: str) -> User:
+    '''
+    gets the User model for the given username
+    '''
     return db.query(User).filter(User.username == username).first()
 
 # authenticate user
-def authenticate_user(db: Session, username: str, password: str):
+def authenticate_user(db: Session, username: str, password: str) -> User | bool:
+    '''
+    try to authenticate the given username and password, and returns the User model
+    if the user is authenticated succesfully, else return False
+    '''
     user = get_user(db, username)
     if not user:
         return False
@@ -40,7 +56,10 @@ def authenticate_user(db: Session, username: str, password: str):
     return user
 
 # create new token
-def create_access_token(data: dict, expires_delta: timedelta = None): # type: ignore
+def create_access_token(data: dict, expires_delta: timedelta = None) -> str: # type: ignore
+    '''
+    create a new access token
+    '''
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -54,7 +73,10 @@ def create_access_token(data: dict, expires_delta: timedelta = None): # type: ig
 async def get_current_user(
     token: str = Depends(oauth2_scheme), 
     db: Session = Depends(get_db)
-):
+) -> User:
+    '''
+    gets the current user from the given access token
+    '''
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",

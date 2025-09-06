@@ -4,6 +4,9 @@ from src.database import Base
 import uuid
 
 class User(Base):
+    '''
+    User model for the database
+    '''
     __tablename__ = "users"
     
     id = Column(String, primary_key=True, default=lambda:str(uuid.uuid4()))

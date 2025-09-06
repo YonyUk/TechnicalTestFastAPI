@@ -5,6 +5,9 @@ from .session import Session
 from .tasks import test_tasks_endpoints
 
 def test_app(app:FastAPI) -> None:
+    '''
+    tests the api
+    '''
     session = Session()
     test_root_endpoint(app)
     test_users_endpoints(app,session)

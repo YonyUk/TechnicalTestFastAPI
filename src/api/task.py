@@ -16,7 +16,9 @@ def create_task(
 ):
     db_task = Task(**task.dict(), user_id=current_user.id)
     db.add(db_task)
+    # commit the changes
     db.commit()
+    # refresh the database session
     db.refresh(db_task)
     return db_task
 
@@ -80,12 +82,13 @@ def update_task(
             detail="Task not found"
         )
     
-    # Actualizar solo los campos proporcionados
+    # updates only the given fields
     update_data = task_update.dict(exclude_unset=True)
     for field, value in update_data.items():
         setattr(task, field, value)
-    
+    # commit the changes
     db.commit()
+    # refresh the database session
     db.refresh(task)
     return task
 

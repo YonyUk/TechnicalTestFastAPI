@@ -4,6 +4,9 @@ from src.database import Base
 import uuid
 
 class Task(Base):
+    '''
+    task model for the database
+    '''
     __tablename__ = "tasks"
     
     id = Column(String, primary_key=True, default=lambda:str(uuid.uuid4()))
