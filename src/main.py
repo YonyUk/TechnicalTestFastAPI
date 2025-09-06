@@ -32,6 +32,7 @@ async def lifespan(app: FastAPI):
     # En producción, usar migraciones con Alembic
     logger.info("Creating database tables...")
     Base.metadata.create_all(bind=engine)
+    print('\n\nINFO:Documentation at\thttp://localhost:8000/docs-scalar\n\n')
     yield
     logger.info("Shutting down...")
 
@@ -39,8 +40,7 @@ app = FastAPI(
     title="Todo API",
     description="API for manage tasks TODO with FastAPI y PostgreSQL",
     version="1.0.0",
-    lifespan=lifespan,
-    docs_url=None
+    lifespan=lifespan
 )
 
 # adds routers
@@ -67,7 +67,7 @@ async def internal_exception_handler(request, exc):
     )
 
 # adds documentation with scalar-fastapi
-@app.get("/docs",include_in_schema=False)
+@app.get("/docs-scalar",include_in_schema=False)
 async def scalar_docs():
     return get_scalar_api_reference(
         openapi_url=app.openapi_url, # type: ignore
@@ -77,6 +77,5 @@ async def scalar_docs():
         show_sidebar=True,
         default_open_all_tags=True,
         hide_download_button=False,
-        hide_models=False,
-        servers=[{'url':'http://localhost:8000','description':'local server'}]
+        hide_models=False
     )
