@@ -12,11 +12,14 @@ from alembic.config import Config
 from alembic import command
 import os
 
-# Configurar logging
+# logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def run_migrations():
+    '''
+    runs the migrations
+    '''
     path_config = os.path.join(os.getcwd(),'alembic.ini')
     alembic_cfg = Config(path_config)
     print(alembic_cfg.get_alembic_option('script_location'))
@@ -40,7 +43,7 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Incluir routers
+# adds routers
 app.include_router(user.router, prefix="/api/v1", tags=["users"])
 app.include_router(task.router, prefix="/api/v1", tags=["tasks"])
 
@@ -52,7 +55,7 @@ async def root():
 async def health_check():
     return {"status": "healthy"}
 
-# Manejo de errores global
+# global error manage
 @app.exception_handler(404)
 async def not_found_exception_handler(request, exc):
     return JSONResponse(
@@ -67,6 +70,7 @@ async def internal_exception_handler(request, exc):
         content={"message": "Error interno del servidor"},
     )
 
+# adds documentation with scalar-fastapi
 @app.get("/docs-scalar",include_in_schema=False)
 async def scalar_docs():
     return get_scalar_api_reference(
